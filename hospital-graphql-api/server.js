@@ -1,12 +1,21 @@
+import 'dotenv/config'; // Loads variables from .env right away
 import { ApolloServer, gql } from 'apollo-server-express';
 import express from 'express';
+import mongoose from 'mongoose';
 
-// 1. Mock Database Data
-const doctorsData = [
-  { id: '1', name: 'Dr. Smith', specialty: 'Cardiology', availableSlots: ['09:00 AM', '11:00 AM'] },
-  { id: '2', name: 'Dr. Jones', specialty: 'Pediatrics', availableSlots: ['02:00 PM', '04:00 PM'] },
-];
+// Connect to Cloud MongoDB Atlas using the environment variable
+const MONGODB_URI = process.env.MONGODB_URI; 
 
+if (!MONGODB_URI) {
+  console.error("❌ Critical: MONGODB_URI environment variable is missing.");
+  process.exit(1);
+}
+
+mongoose.connect(MONGODB_URI)
+  .then(() => console.log('☁️ Successfully connected to Cloud MongoDB Atlas!'))
+  .catch(err => console.error('❌ MongoDB Atlas connection error:', err));
+
+// ... (Keep the rest of your Schema, Models, Resolvers, and startServer functions identical!)
 const appointmentsData = [];
 
 // 2. GraphQL Schema Definition (Type Definitions)
